@@ -20,7 +20,7 @@ import { CoursesModule } from './courses/courses.module';
       password:'computer',
       database:'talentdevapi',
       autoLoadEntities:true,
-      synchronize:true
+      synchronize:false,
       
     }),
 
