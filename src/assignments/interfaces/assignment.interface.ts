@@ -1,20 +1,16 @@
-export enum UserType{
-    admin = "Administrator",
-    student= "Student",
-    tutor = "Facilitator"
-}
-
-
-
 export interface Assignment {
-    userType: UserType;
-    userId: number;
+    
     tutorId: number;
     adminId: number;
-    courseName: string;
-    courseId: string;
-    results: number ;
-    completion: boolean;
+    courseId: number;
     createdAt: Date;
     dueDate: Date;
+}     
+
+export interface AssignmentSubmission {
+    assignmentId: number;
+    score: number;
+    completion: boolean;
+    createdAt: Date;
+    studentId: number;
 }     

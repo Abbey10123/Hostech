@@ -1,9 +1,5 @@
 export interface Certificate{
-    adminId: string;
-    tutorId: string
-    userId: string;
-    email: string;
-    fullName: string;
-    courseName: string;
-    courseId: string;
+    adminId: number;
+    certificateContent: string;
+    courseId: number;
 }
