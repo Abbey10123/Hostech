@@ -3,13 +3,13 @@ import { CommunityService } from './community.service';
 import { CreateCommunityDto } from './dto/create-community.dto';
 import { UpdateCommunityDto } from './dto/update-community.dto';
 
-@Controller('community')
+@Controller('user')
 export class CommunityController {
   constructor(private readonly communityService: CommunityService) {}
 
   @Post()
-  create(@Body() createCommunityDto: CreateCommunityDto) {
-    return this.communityService.create(createCommunityDto);
+  create(@Body() body) {
+    return this.communityService.create(body);
   }
 
   @Get()
@@ -17,10 +17,7 @@ export class CommunityController {
     return this.communityService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.communityService.findOne(+id);
-  }
+  
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCommunityDto: UpdateCommunityDto) {

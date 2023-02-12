@@ -1,11 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCommunityDto } from './dto/create-community.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { UpdateCommunityDto } from './dto/update-community.dto';
+import { Community } from './entities/community.entity';
 
 @Injectable()
 export class CommunityService {
-  create(createCommunityDto: CreateCommunityDto) {
-    return 'This action adds a new community';
+  constructor(
+    @InjectRepository(Community)
+    private userRepo: Repository<Community>
+  ){}
+  create(user) {
+    const aUser = this.userRepo.create({...user});
+    return this.userRepo.save(aUser);
   }
 
   findAll() {
@@ -13,7 +21,7 @@ export class CommunityService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} community`;
+    return this.userRepo.findOne({where: {id: id}});
   }
 
   update(id: number, updateCommunityDto: UpdateCommunityDto) {
