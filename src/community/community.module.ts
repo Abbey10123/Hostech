@@ -5,8 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm/dist';
 import { CommunityEntity } from './entities/community.entity';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([CommunityEntity])],
+  imports: [TypeOrmModule.forFeature([CommunityEntity])],
   controllers: [CommunityController],
-  providers: [CommunityService]
+  providers: [CommunityService],
 })
 export class CommunityModule {}
