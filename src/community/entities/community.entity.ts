@@ -1,14 +1,18 @@
-import { CourseEntity } from 'src/courses/entities/course.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { User, UserType, Gender } from '../interface/user.interface';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Gender, User, UserType } from '../interface/user.interface';
 
-@Entity({ name: 'users' })
-export class Community implements User {
+@Entity({
+  name: ' community',
+})
+export class CommunityEntity implements User {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ name: 'full_name' })
   fullName: string;
+
+  @Column({ name: 'phone_number' })
+  phoneNumber: string;
 
   @Column()
   email: string;
@@ -16,18 +20,22 @@ export class Community implements User {
   @Column()
   password: string;
 
-  @Column()
-  title: string;
-
-  @Column({ nullable: true, name: 'user_type' })
-  userType: UserType;
-
-  @Column({ default: Gender.PreferNotToSay })
+  @Column({
+    type: 'enum',
+    enum: Gender,
+    default: Gender.PreferNotToSay,
+    nullable: false,
+  })
   gender: Gender;
 
-  @Column({ name: 'phone_number' })
-  phoneNumber: string;
+  @Column({
+    type: 'enum',
+    enum: UserType,
+    default: UserType.Student,
+    nullable: false,
+  })
+  userType: UserType;
 
-  @OneToMany(() => CourseEntity, (course) => course.UserType)
-  courses: CourseEntity[];
+  @Column()
+  title: string;
 }

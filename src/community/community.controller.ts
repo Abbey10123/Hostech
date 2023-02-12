@@ -1,17 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { CommunityService } from './community.service';
-import { CreateCommunityDto } from './dto/create-community.dto';
-import { UpdateCommunityDto } from './dto/update-community.dto';
+import { User } from './interface/user.interface';
 
 @Controller('user')
 export class CommunityController {
   constructor(private readonly communityService: CommunityService) {}
 
   @Post()
-  create(@Body() body) {
-    return this.communityService.create(body);
+  create(@Body() user: User) {
+    return this.communityService.createUser(user);
   }
 
+  @Post('login')
+  login(@Body() loginInfo: User) {
+    // and this
+    return this.communityService.login(loginInfo);
+  }
+
+  /*
   @Get()
   findAll() {
     return this.communityService.findAll();
@@ -27,5 +33,5 @@ export class CommunityController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.communityService.remove(+id);
-  }
+  } */
 }
