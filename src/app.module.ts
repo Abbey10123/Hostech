@@ -7,9 +7,6 @@ import { CertificatesModule } from './certificates/certificates.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { CommunityModule } from './community/community.module';
 import { CoursesModule } from './courses/courses.module';
-import { Community } from './community/entities/community.entity';
-import { CourseEntity } from './courses/entities/course.entity';
-import { ContentEntity } from './courses/entities/courseContent.entity';
 
 @Module({
   imports: [
@@ -18,12 +15,12 @@ import { ContentEntity } from './courses/entities/courseContent.entity';
     TransactionsModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: 'db4free.net',
       port: 3306,
-      username: 'root',
-      password: '',
+      username: 'talentuser2023',
+      password: 'computer',
       database: 'talentdevapi',
-      entities: [Community, CourseEntity, ContentEntity],
+      autoLoadEntities: true,
       synchronize: true,
     }),
 
