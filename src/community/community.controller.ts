@@ -1,5 +1,6 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get } from '@nestjs/common';
 import { CommunityService } from './community.service';
+import { NotVerifiedEmailGuard } from './guards/not-verified-email.guard';
 import { User } from './interface/user.interface';
 
 @Controller('user')
@@ -15,6 +16,12 @@ export class CommunityController {
   login(@Body() loginInfo: User) {
     // and this
     return this.communityService.login(loginInfo);
+  }
+
+  @UseGuards(NotVerifiedEmailGuard)
+  @Get('profile')
+  getProfile() {
+    return `Profile is accesible`;
   }
 
   /*

@@ -5,12 +5,14 @@ import { CommunityEntity } from './entities/community.entity';
 import { User } from './interface/user.interface';
 import * as bcrypt from 'bcrypt';
 import { BadRequestException } from '@nestjs/common/exceptions';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class CommunityService {
   constructor(
     @InjectRepository(CommunityEntity)
     private communityRepository: Repository<CommunityEntity>,
+    private jwtService:JwtService,
   ) {}
   //check if email is registered
   async isEmailRegistered(email: string) {
@@ -66,6 +68,7 @@ export class CommunityService {
 
       delete userCheck.password;
       return {
+       token:this.jwtService.sign({...userCheck}),
         user: userCheck,
         message: 'You have successfully logged in',
       };
