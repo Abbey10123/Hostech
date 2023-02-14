@@ -8,17 +8,16 @@ import { BadRequestException } from '@nestjs/common/exceptions';
 import { generateOtp } from 'src/helpers/otp-generator.helper';
 import { sendEmail } from 'src/helpers/send-email.helper';
 import { OtpEntity } from './entities/otp.entity';
+import { Otp } from './interface/otp.interface';
 
 @Injectable()
 export class CommunityService {
   constructor(
     @InjectRepository(CommunityEntity)
     private communityRepository: Repository<CommunityEntity>,
-
     @InjectRepository(OtpEntity)
-    private otpRepo: Repository<OtpEntity>
-
-  ) {}
+    private otpRepository: Repository<OtpEntity>
+  ) { }
   //check if email is registered
   async isEmailRegistered(email: string) {
     const userWithEmail = await this.communityRepository.findOne({
@@ -30,7 +29,7 @@ export class CommunityService {
     return false;
   }
 
-  async createUser(user: User) {
+  async createUser(user) {
     try {
       if (await this.isEmailRegistered(user.email)) {
         throw 'This Email address is already registered';
@@ -38,13 +37,20 @@ export class CommunityService {
 
       // lets encrypt the password
       const encryptedPass = await bcrypt.hash(user.password, 5);
-      user.password = encryptedPass;
+      user.password = encryptedPass
 
       // Save the user to the DB
       const userSaved = await this.communityRepository.save(user);
-
-      //More Checks
-
+      // Generate Otp
+      const otp = generateOtp();
+      const expiry = new Date();
+      expiry.setMinutes(expiry.getMinutes() + 15);
+      await this.otpRepository.save({
+        user_id : userSaved.id,
+        code : otp.toString(),
+        // reason: OtpReason.verifyEmail,
+        expiryDate: expiry,        
+      })
       //Send a message to the user
       delete userSaved.password;
       return {
@@ -57,7 +63,7 @@ export class CommunityService {
     }
   }
 
-  async login(loginInfo: User) {
+  async login(loginInfo) {
     // not sure if this is correct
     try {
       // check if user is already registered
@@ -90,12 +96,12 @@ export class CommunityService {
       // const d = new Date();
       // const dd = d.setMinutes(d.getMinutes() + 30);
       const otpValue = generateOtp();
-      const newOtp = this.otpRepo.create({
+      const newOtp = this.otpRepository.create({
         otp : otpValue.toString(),
         // expired_at: dd,
         user_id: user.id
       });
-      const savedOtp = await this.otpRepo.save(newOtp);
+      const savedOtp = await this.otpRepository.save(newOtp);
       const message = `Please input this verification code ${savedOtp.otp} to reset your password`
       const subject = `Password Reset`
       sendEmail(user, message, subject);
@@ -110,7 +116,7 @@ export class CommunityService {
 
   async resetPassword (otp, password) {
     try{
-      const otpUser = await this.otpRepo.findOne({where: {otp: otp}});
+      const otpUser = await this.otpRepository.findOne({where: {otp: otp}});
       if(!otpUser){
         throw new Error("Otp not valid");
       }

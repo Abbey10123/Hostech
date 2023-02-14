@@ -8,12 +8,12 @@ export class CommunityController {
   constructor(private readonly communityService: CommunityService) {}
 
   @Post()
-  create(@Body() user: User) {
+  create(@Body() user) {
     return this.communityService.createUser(user);
   }
 
   @Post('login')
-  login(@Body() loginInfo: User) {
+  login(@Body() loginInfo) {
     // and this
     return this.communityService.login(loginInfo);
   }

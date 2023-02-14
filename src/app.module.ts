@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AssignmentController } from './assignments/assignments.controller';
 import { AssignmentModule } from './assignments/assignments.module';
 import { CertificatesModule } from './certificates/certificates.module';
 import { TransactionsModule } from './transactions/transactions.module';
@@ -10,9 +11,7 @@ import { CoursesModule } from './courses/courses.module';
 
 @Module({
   imports: [
-    AssignmentModule,
-    CertificatesModule,
-    TransactionsModule,
+    AssignmentModule, CertificatesModule, TransactionsModule, CommunityModule, CoursesModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'db4free.net',
@@ -22,11 +21,7 @@ import { CoursesModule } from './courses/courses.module';
       database: 'talentdevapi',
       autoLoadEntities: true,
       synchronize: true,
-    }),
-
-    CommunityModule,
-    CoursesModule,
-  ],
+    })],
   controllers: [AppController],
   providers: [AppService],
 })
