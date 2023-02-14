@@ -5,12 +5,19 @@ import { CommunityEntity } from './entities/community.entity';
 import { User } from './interface/user.interface';
 import * as bcrypt from 'bcrypt';
 import { BadRequestException } from '@nestjs/common/exceptions';
+import { generateOtp } from 'src/helpers/otp-generator.helper';
+import { sendEmail } from 'src/helpers/send-email.helper';
+import { OtpEntity } from './entities/otp.entity';
 
 @Injectable()
 export class CommunityService {
   constructor(
     @InjectRepository(CommunityEntity)
     private communityRepository: Repository<CommunityEntity>,
+
+    @InjectRepository(OtpEntity)
+    private otpRepo: Repository<OtpEntity>
+
   ) {}
   //check if email is registered
   async isEmailRegistered(email: string) {
@@ -73,4 +80,48 @@ export class CommunityService {
       throw new BadRequestException(error);
     }
   }
+
+  async forgotPassword(email) {
+    try{
+      const user = await this.communityRepository.findOne({where:{email: email}}) ;
+      if(!user){
+        throw new Error("Email does not exist");
+      }
+      // const d = new Date();
+      // const dd = d.setMinutes(d.getMinutes() + 30);
+      const otpValue = generateOtp();
+      const newOtp = this.otpRepo.create({
+        otp : otpValue.toString(),
+        // expired_at: dd,
+        user_id: user.id
+      });
+      const savedOtp = await this.otpRepo.save(newOtp);
+      const message = `Please input this verification code ${savedOtp.otp} to reset your password`
+      const subject = `Password Reset`
+      sendEmail(user, message, subject);
+      return `Reset email sent successfully`
+    }
+    catch(err) {
+      console.log(err)
+      return err
+    }
+
+  }
+
+  async resetPassword (otp, password) {
+    try{
+      const otpUser = await this.otpRepo.findOne({where: {otp: otp}});
+      if(!otpUser){
+        throw new Error("Otp not valid");
+      }
+      const encryptPassword = await bcrypt.hash(password, 10);
+      const updatedUser = await this.communityRepository.update(otpUser.user_id, {password: encryptPassword})
+      return `Password updated successfully  ` ;
+    }
+    catch(err){
+      console.log(err)
+    }
+  }
 }
+
+

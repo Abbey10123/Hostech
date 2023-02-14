@@ -1,8 +1,6 @@
 import {
   Column,
   Entity,
-  JoinColumn,
-  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { CourseContent } from '../interfaces/course.interface';
