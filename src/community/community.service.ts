@@ -8,7 +8,7 @@ import { BadRequestException } from '@nestjs/common/exceptions';
 import { generateOtp } from 'src/helpers/otp-generator.helper';
 import { sendEmail } from 'src/helpers/send-email.helper';
 import { OtpEntity } from './entities/otp.entity';
-import { Otp } from './interface/otp.interface';
+import { Otp, OtpReason } from './interface/otp.interface';
 
 @Injectable()
 export class CommunityService {
@@ -94,15 +94,17 @@ export class CommunityService {
         throw new Error("Email does not exist");
       }
       // const d = new Date();
-      // const dd = d.setMinutes(d.getMinutes() + 30);
+      // const dd= d.setMinutes(d.getMinutes() + 30);
+
       const otpValue = generateOtp();
       const newOtp = this.otpRepository.create({
-        otp : otpValue.toString(),
-        // expired_at: dd,
-        user_id: user.id
+        code : otpValue.toString(),
+        // expiryDate: dd.toISOString(),
+        userId: user.id,
+        reason: OtpReason.resetPassword
       });
       const savedOtp = await this.otpRepository.save(newOtp);
-      const message = `Please input this verification code ${savedOtp.otp} to reset your password`
+      const message = `Please input this verification code ${savedOtp.code} to reset your password`
       const subject = `Password Reset`
       sendEmail(user, message, subject);
       return `Reset email sent successfully`
@@ -116,12 +118,12 @@ export class CommunityService {
 
   async resetPassword (otp, password) {
     try{
-      const otpUser = await this.otpRepository.findOne({where: {otp: otp}});
+      const otpUser = await this.otpRepository.findOne({where: {code: otp}});
       if(!otpUser){
         throw new Error("Otp not valid");
       }
       const encryptPassword = await bcrypt.hash(password, 10);
-      const updatedUser = await this.communityRepository.update(otpUser.user_id, {password: encryptPassword})
+      const updatedUser = await this.communityRepository.update(otpUser.userId, {password: encryptPassword})
       return `Password updated successfully  ` ;
     }
     catch(err){
