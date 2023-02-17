@@ -3,20 +3,20 @@ import { CommunityService } from './community.service';
 import { CommunityController } from './community.controller';
 import { TypeOrmModule } from '@nestjs/typeorm/dist';
 import { CommunityEntity } from './entities/community.entity';
-import { JwtModule } from '@nestjs/jwt';
+import { OtpEntity } from './entities/otp.entity';
 import { NotVerifiedEmailStrategy } from './strategies/not-verified-email.strategy';
+import { JwtModule } from '@nestjs/jwt/dist';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CommunityEntity]),
-            JwtModule.register({
-             secret:'jwtEncryptionKey',
-             signOptions:{
-              expiresIn:'3m',
-             }
-            })
-           ],
+  imports: [TypeOrmModule.forFeature([CommunityEntity, OtpEntity]),JwtModule.register({
+    secret:'jwtEcryptionKey',
+    signOptions:{
+      expiresIn:"60s",
+    }
+
+  })],
   controllers: [CommunityController],
-  providers: [CommunityService, NotVerifiedEmailStrategy],
+  providers: [CommunityService, NotVerifiedEmailStrategy,],
   
 })
 export class CommunityModule {}

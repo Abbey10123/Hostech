@@ -1,6 +1,6 @@
-import { Controller, Post, Body, UseGuards, Get } from '@nestjs/common';
+import { Controller, Post, Body, Param } from '@nestjs/common';
 import { CommunityService } from './community.service';
-import { NotVerifiedEmailGuard } from './guards/not-verified-email.guard';
+import { GetEmailDto, ValidPassword } from './dto/get-emial.dto';
 import { User } from './interface/user.interface';
 
 @Controller('user')
@@ -8,20 +8,24 @@ export class CommunityController {
   constructor(private readonly communityService: CommunityService) {}
 
   @Post()
-  create(@Body() user: User) {
+  create(@Body() user) {
     return this.communityService.createUser(user);
   }
 
   @Post('login')
-  login(@Body() loginInfo: User) {
+  login(@Body() loginInfo) {
     // and this
     return this.communityService.login(loginInfo);
   }
 
-  @UseGuards(NotVerifiedEmailGuard)
-  @Get('profile')
-  getProfile() {
-    return `Profile is accesible`;
+  @Post('forgot-password')
+  forgotPassword(@Body() user:GetEmailDto) {
+    return this.communityService.forgotPassword(user.email);
+  }
+
+  @Post('reset-password/:otp')
+  resetPassword(@Param('otp') otp: number, @Body() password: ValidPassword){
+    return this.communityService.resetPassword(otp, password.password);
   }
 
   /*
