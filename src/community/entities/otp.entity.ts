@@ -12,8 +12,8 @@ export class OtpEntity implements Otp {
   @Column()
   code: string;
 
-  @Column({ type: 'timestamp' })
-  expiryDate: Date;
+  // @Column({type: 'datetime', name:'expiry_date'})
+  // expiryDate: Date;
 
   @Column({
     type: 'enum',

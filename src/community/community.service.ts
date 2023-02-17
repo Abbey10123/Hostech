@@ -43,16 +43,15 @@ export class CommunityService {
       // Save the user to the DB
       const userSaved = await this.communityRepository.save(user);
       // Generate Otp
-      // const otp = generateOtp();
-      // const expiry = new Date();
-      // expiry.setMinutes(expiry.getMinutes() + 15);
-      // await this.otpRepository.save({
-      //  user_id : userSaved.id,
-      //  code : otp.toString(),
-      //  // reason: OtpReason.verifyEmail,
-      // expiryDate: expiry,
-      // })
-
+      const otp = generateOtp();
+      const expiry = new Date();
+      expiry.setMinutes(expiry.getMinutes() + 15);
+      await this.otpRepository.save({
+        userId: userSaved.id,
+        code: otp.toString(),
+        // reason: OtpReason.verifyEmail,
+        expiryDate: expiry,
+      });
       //Send a message to the user
       delete userSaved.password;
       const message = ` Welcome ${userSaved.fullName} to Talent dev Community,

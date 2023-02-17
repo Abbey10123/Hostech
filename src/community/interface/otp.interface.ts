@@ -7,6 +7,6 @@ export enum OtpReason {
 export interface Otp {
   userId: number;
   code: string;
-  expiryDate: Date;
+  //   expiryDate: Date;
   reason: OtpReason;
 }

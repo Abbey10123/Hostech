@@ -1,19 +1,20 @@
 import { Controller, Post, Body, Param } from '@nestjs/common';
 import { CommunityService } from './community.service';
 import { GetEmailDto, ValidPassword } from './dto/get-emial.dto';
-import { User } from './interface/user.interface';
+import { CreateUserDto } from './dto/create-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Controller('user')
 export class CommunityController {
   constructor(private readonly communityService: CommunityService) {}
 
   @Post()
-  create(@Body() user) {
+  create(@Body() user: CreateUserDto) {
     return this.communityService.createUser(user);
   }
 
   @Post('login')
-  login(@Body() loginInfo) {
+  login(@Body() loginInfo: LoginUserDto) {
     // and this
     return this.communityService.login(loginInfo);
   }
