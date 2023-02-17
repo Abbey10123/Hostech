@@ -12,7 +12,7 @@ export enum Gender {
 
 export interface User {
   id: number;
-  fullName: string; 
+  fullName: string;
   phoneNumber: string;
   email: string;
   password: string;

@@ -6,8 +6,10 @@ import { AssignmentSubmissionEntity } from './entities/assignment-submission.ent
 import { AssignmentEntity } from './entities/assignment.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AssignmentEntity,AssignmentSubmissionEntity])],
+  imports: [
+    TypeOrmModule.forFeature([AssignmentEntity, AssignmentSubmissionEntity]),
+  ],
   controllers: [AssignmentController],
-  providers: [AssignmentService]
+  providers: [AssignmentService],
 })
 export class AssignmentModule {}

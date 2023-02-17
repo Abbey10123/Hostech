@@ -19,12 +19,12 @@ export class CommunityController {
   }
 
   @Post('forgot-password')
-  forgotPassword(@Body() user:GetEmailDto) {
+  forgotPassword(@Body() user: GetEmailDto) {
     return this.communityService.forgotPassword(user.email);
   }
 
   @Post('reset-password/:otp')
-  resetPassword(@Param('otp') otp: number, @Body() password: ValidPassword){
+  resetPassword(@Param('otp') otp: number, @Body() password: ValidPassword) {
     return this.communityService.resetPassword(otp, password.password);
   }
 

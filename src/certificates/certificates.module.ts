@@ -7,6 +7,6 @@ import { CertificateEntity } from './entities/certificate.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([CertificateEntity])],
   controllers: [CertificatesController],
-  providers: [CertificatesService]
+  providers: [CertificatesService],
 })
 export class CertificatesModule {}

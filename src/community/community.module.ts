@@ -8,15 +8,16 @@ import { NotVerifiedEmailStrategy } from './strategies/not-verified-email.strate
 import { JwtModule } from '@nestjs/jwt/dist';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CommunityEntity, OtpEntity]),JwtModule.register({
-    secret:'jwtEcryptionKey',
-    signOptions:{
-      expiresIn:"60s",
-    }
-
-  })],
+  imports: [
+    TypeOrmModule.forFeature([CommunityEntity, OtpEntity]),
+    JwtModule.register({
+      secret: 'jwtEcryptionKey',
+      signOptions: {
+        expiresIn: '60s',
+      },
+    }),
+  ],
   controllers: [CommunityController],
-  providers: [CommunityService, NotVerifiedEmailStrategy,],
-  
+  providers: [CommunityService, NotVerifiedEmailStrategy],
 })
 export class CommunityModule {}

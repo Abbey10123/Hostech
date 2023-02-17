@@ -1,14 +1,13 @@
-import { Contains, IsEmail, IsNotEmpty, Length } from "class-validator";
+import { Contains, IsEmail, IsNotEmpty, Length } from 'class-validator';
 
 export class GetEmailDto {
-    @IsEmail()
-    email: string;
+  @IsEmail()
+  email: string;
 }
 
 export class ValidPassword {
-    @IsNotEmpty()
-    @Length(10, 20)
-    @Contains('@!#$')
-    password: string;
+  @IsNotEmpty()
+  @Length(10, 20)
+  @Contains('@!#$')
+  password: string;
 }
-

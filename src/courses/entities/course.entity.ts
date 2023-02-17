@@ -1,6 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-
 @Entity({ name: 'courses' })
 export class CourseEntity {
   @PrimaryGeneratedColumn()
