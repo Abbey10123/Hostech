@@ -1,21 +1,21 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { Otp, OtpReason } from "../interface/otp.interface";
 
-@Entity({name: "otps"})
+@Entity({ name: "otps" })
 
-export class OtpEntity implements Otp{
+export class OtpEntity implements Otp {
     @PrimaryGeneratedColumn()
-    id:number;
+    id: number;
 
-    @Column({type:"int", name:"user_id"})
+    @Column({ type: "int", name: "user_id" })
     userId: number;
 
     @Column()
     code: string;
 
-    @Column({type: "timestamp"})
+    @Column({ type: "timestamp" })
     expiryDate: Date;
 
-    @Column({type:"enum", enum: OtpReason, default:OtpReason.verifyEmail, nullable:false})
+    @Column({ type: "enum", enum: OtpReason, default: OtpReason.verifyEmail, nullable: false })
     reason: OtpReason;
 }

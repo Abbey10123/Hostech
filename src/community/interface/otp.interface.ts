@@ -1,12 +1,13 @@
-export enum OtpReason{
+export enum OtpReason {
     verifyEmail = "verify-email",
     verifyPayment = "verify-payment",
+    resetPassword = "reset-password"
 }
 
 
-export interface Otp{
+export interface Otp {
     userId: number;
-    code:string;
+    code: string;
     expiryDate: Date;
-    reason:OtpReason;
+    reason: OtpReason;
 }
