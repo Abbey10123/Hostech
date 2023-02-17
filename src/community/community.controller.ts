@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Param } from '@nestjs/common';
 import { CommunityService } from './community.service';
-import { GetEmailDto, ValidPassword } from './dto/get-email.dto';
+import { GetEmailDto, ValidPassword } from './dto/get-emial.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 

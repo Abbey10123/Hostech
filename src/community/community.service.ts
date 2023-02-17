@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CommunityEntity } from './entities/community.entity';
-import { User } from './interface/user.interface';
 import * as bcrypt from 'bcrypt';
 import { BadRequestException } from '@nestjs/common/exceptions';
 import { generateOtp } from 'src/helpers/otp-generator.helper';
 import { sendEmail } from 'src/helpers/send-email.helper';
 import { OtpEntity } from './entities/otp.entity';
-import { Otp, OtpReason } from './interface/otp.interface';
+import { OtpReason } from './interface/otp.interface';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class CommunityService {
@@ -17,6 +17,7 @@ export class CommunityService {
     private communityRepository: Repository<CommunityEntity>,
     @InjectRepository(OtpEntity)
     private otpRepository: Repository<OtpEntity>,
+    private jwtService: JwtService,
   ) {}
   //check if email is registered
   async isEmailRegistered(email: string) {
@@ -53,6 +54,13 @@ export class CommunityService {
       });
       //Send a message to the user
       delete userSaved.password;
+      const message = ` Welcome ${userSaved.fullName} to Talent dev Community,
+      We look forward to serving you the best education you need to fulfill your dreams! 
+      Our institution welcomes you! We will make sure that we will have the support and 
+      encouragement you as you embark on your academic journey with us! `;
+      const subject = 'Welcome to Talent Dev';
+      sendEmail(userSaved, message, subject);
+
       return {
         userDetails: userSaved,
         message:
@@ -79,6 +87,7 @@ export class CommunityService {
 
       delete userCheck.password;
       return {
+        token: this.jwtService.sign({ ...userCheck }),
         user: userCheck,
         message: 'You have successfully logged in',
       };
