@@ -1,9 +1,8 @@
-import { Controller, Post, Body, Param, Patch } from '@nestjs/common';
+import { Controller, Post, Body, Param } from '@nestjs/common';
 import { CommunityService } from './community.service';
-import { GetEmailDto, ValidPassword } from './dto/get-emial.dto';
+import { GetEmailDto, ValidPassword } from './dto/get-email.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { User } from './interface/user.interface';
 
 @Controller('user')
 export class CommunityController {
@@ -16,7 +15,6 @@ export class CommunityController {
 
   @Post('login')
   login(@Body() loginInfo: LoginUserDto) {
-    // and this
     return this.communityService.login(loginInfo);
   }
 
@@ -29,23 +27,4 @@ export class CommunityController {
   resetPassword(@Param('otp') otp: number, @Body() password: ValidPassword) {
     return this.communityService.resetPassword(otp, password.password);
   }
-
-  
-  /*
-  @Get()
-  findAll() {
-    return this.communityService.findAll();
-  }
-
-  
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommunityDto: UpdateCommunityDto) {
-    return this.communityService.update(+id, updateCommunityDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.communityService.remove(+id);
-  } */
 }
