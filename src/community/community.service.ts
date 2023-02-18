@@ -44,16 +44,6 @@ export class CommunityService {
 
       // Save the user to the DB
       const userSaved = await this.communityRepository.save(user);
-      // Generate Otp
-      // const otp = generateOtp();
-      // const expiry = new Date();
-      // expiry.setMinutes(expiry.getMinutes() + 15);
-      // await this.otpRepository.save({
-      //   userId: userSaved.id,
-      //   code: otp.toString(),
-      //   // reason: OtpReason.verifyEmail,
-      //   expiryDate: expiry,
-      // });
       //Send a message to the user
       delete userSaved.password;
       const message = ` Welcome ${userSaved.fullName} to Talent dev Community,
@@ -106,13 +96,11 @@ export class CommunityService {
       if (!user) {
         throw new Error('Email does not exist');
       }
-      // const d = new Date();
-      // const dd= d.setMinutes(d.getMinutes() + 30);
+      
 
       const otpValue = generateOtp();
       const newOtp = this.otpRepository.create({
         code: otpValue.toString(),
-        // expiryDate: dd.toISOString(),
         userId: user.id,
         reason: OtpReason.resetPassword,
       });
