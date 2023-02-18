@@ -13,7 +13,7 @@ import { TutorStrategy } from './strategies/tutor-access.strategy';
   imports: [
     TypeOrmModule.forFeature([CommunityEntity, OtpEntity]),
     JwtModule.register({
-      secret: 'jwtEcryptionKey',
+      secret: 'jwtEncryptionKey',
       signOptions: {
         expiresIn: '60s',
       },
