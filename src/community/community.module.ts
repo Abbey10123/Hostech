@@ -6,6 +6,8 @@ import { CommunityEntity } from './entities/community.entity';
 import { OtpEntity } from './entities/otp.entity';
 import { NotVerifiedEmailStrategy } from './strategies/not-verified-email.strategy';
 import { JwtModule } from '@nestjs/jwt/dist';
+import { AdminStrategy } from './strategies/admin-access.strategy';
+import { TutorStrategy } from './strategies/tutor-access.strategy';
 
 @Module({
   imports: [
@@ -18,6 +20,6 @@ import { JwtModule } from '@nestjs/jwt/dist';
     }),
   ],
   controllers: [CommunityController],
-  providers: [CommunityService, NotVerifiedEmailStrategy],
+  providers: [CommunityService, NotVerifiedEmailStrategy,AdminStrategy,TutorStrategy],
 })
 export class CommunityModule {}
