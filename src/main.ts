@@ -6,9 +6,7 @@ import { ppid } from 'process';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-    }),
+    new ValidationPipe(),
   );
 
   await app.listen(3000);

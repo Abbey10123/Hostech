@@ -9,6 +9,8 @@ import { sendEmail } from 'src/helpers/send-email.helper';
 import { OtpEntity } from './entities/otp.entity';
 import { OtpReason } from './interface/otp.interface';
 import { JwtService } from '@nestjs/jwt';
+import { generatePassword } from 'src/helpers/password-generator.helper';
+import { UserType } from './interface/user.interface';
 
 @Injectable()
 export class CommunityService {
@@ -43,15 +45,15 @@ export class CommunityService {
       // Save the user to the DB
       const userSaved = await this.communityRepository.save(user);
       // Generate Otp
-      const otp = generateOtp();
-      const expiry = new Date();
-      expiry.setMinutes(expiry.getMinutes() + 15);
-      await this.otpRepository.save({
-        userId: userSaved.id,
-        code: otp.toString(),
-        // reason: OtpReason.verifyEmail,
-        expiryDate: expiry,
-      });
+      // const otp = generateOtp();
+      // const expiry = new Date();
+      // expiry.setMinutes(expiry.getMinutes() + 15);
+      // await this.otpRepository.save({
+      //   userId: userSaved.id,
+      //   code: otp.toString(),
+      //   // reason: OtpReason.verifyEmail,
+      //   expiryDate: expiry,
+      // });
       //Send a message to the user
       delete userSaved.password;
       const message = ` Welcome ${userSaved.fullName} to Talent dev Community,
@@ -141,6 +143,35 @@ export class CommunityService {
       return `Password updated successfully  `;
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  async createAdmin(user){
+    try{
+      const userFound = await this.isEmailRegistered(user.email);
+      if(!userFound){
+        const password = generatePassword(8);
+        const encryptedPassword = await bcrypt.hash(password, 10);
+          const userAdmin = this.communityRepository.create({
+            email: user.email,
+            phoneNumber:user.phoneNumber,
+            title: user.title,
+            gender: user.gender,
+            userType: user.userType,
+            fullName: user.fullName,
+            password: encryptedPassword
+          });
+          const savedAdmin = await this.communityRepository.save(userAdmin);
+          const message = `You are welcome to Talent Dev, Kindly use these information to login to your account "email: ${savedAdmin.email} password: ${password}"`;
+          const subject = `Welcome to Talent Dev `;
+          await sendEmail(user, message, subject);
+          console.log("Admin created successfully!")
+          return 'User created successfully';
+      }
+      return 'User exists';
+    }
+    catch(err){
+      return err
     }
   }
 }
