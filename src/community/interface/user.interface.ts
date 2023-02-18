@@ -18,6 +18,7 @@ export interface User {
   password: string;
   gender: Gender;
   userType: UserType;
+  emailVerified?: boolean;
   title: string;
 }
 

@@ -10,7 +10,8 @@ import { OtpEntity } from './entities/otp.entity';
 import { OtpReason } from './interface/otp.interface';
 import { JwtService } from '@nestjs/jwt';
 import { generatePassword } from 'src/helpers/password-generator.helper';
-import { UserType } from './interface/user.interface';
+import { User, UserType } from './interface/user.interface';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class CommunityService {
@@ -96,7 +97,6 @@ export class CommunityService {
       if (!user) {
         throw new Error('Email does not exist');
       }
-      
 
       const otpValue = generateOtp();
       const newOtp = this.otpRepository.create({
@@ -134,35 +134,60 @@ export class CommunityService {
     }
   }
 
-  async createAdmin(user){
-    try{
-      if(user.userType===UserType.Admin || user.userType===UserType.Tutor){
+  async createAdmin(user) {
+    try {
+      if (
+        user.userType === UserType.Admin ||
+        user.userType === UserType.Tutor
+      ) {
         const userFound = await this.isEmailRegistered(user.email);
-      if(!userFound){
-        const password = generatePassword(8);
-        const encryptedPassword = await bcrypt.hash(password, 10);
+        if (!userFound) {
+          const password = generatePassword(8);
+          const encryptedPassword = await bcrypt.hash(password, 10);
           const userAdmin = this.communityRepository.create({
             email: user.email,
-            phoneNumber:user.phoneNumber,
+            phoneNumber: user.phoneNumber,
             title: user.title,
             gender: user.gender,
             userType: user.userType,
             fullName: user.fullName,
-            password: encryptedPassword
+            password: encryptedPassword,
           });
           const savedAdmin = await this.communityRepository.save(userAdmin);
           const message = `You are welcome to Talent Dev, Kindly use these information to login to your account "email: ${savedAdmin.email} password: ${password}"`;
           const subject = `Welcome to Talent Dev `;
-          await sendEmail(user, message, subject);
+          sendEmail(user, message, subject);
           return 'User created successfully';
+        }
+        throw `User not found`;
       }
-      throw new BadRequestException();
-      }
-      throw new BadRequestException();
-      
+      throw `Invalid User type`;
+    } catch (err) {
+      throw new BadRequestException(err);
     }
-    catch(err){
-      return err
+  }
+  async changePassword(user: User, data: ChangePasswordDto) {
+    try {
+      const userDetails = await this.communityRepository.findOne({
+        where: { id: user.id },
+      });
+      if (data.newPassword !== data.confirmNewPassword)
+        throw `New password and it's confirmation don't match`;
+      if (!(await bcrypt.compare(data.currentPassword, userDetails.password)))
+        throw `Invalid current password`;
+
+      await this.communityRepository.update(
+        { id: user.id },
+        { password: await bcrypt.hash(data.newPassword, 10) },
+      );
+
+      sendEmail(
+        user,
+        `Your password was just changed. Please notify us if you didn't change your password.`,
+        'TalentDev: Password Changed',
+      );
+    } catch (e) {
+      throw new BadRequestException(e);
     }
   }
 }

@@ -1,10 +1,21 @@
-import { Controller, Post, Body, Param, UseGuards, Get } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Param,
+  UseGuards,
+  Get,
+  Patch,
+  Request,
+} from '@nestjs/common';
 import { CommunityService } from './community.service';
 import { GetEmailDto, ValidPassword } from './dto/get-email.dto';
 import { CreateAdminDto, CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AdminAccess } from './guards/admin-access.guards';
 import { TutorAccess } from './guards/tutor-access.guards';
+import { VerifiedEmailGuard } from './guards/verified-email.guard';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Controller('user')
 export class CommunityController {
@@ -45,25 +56,13 @@ export class CommunityController {
 
   @UseGuards(TutorAccess)
   @Get('tutor')
-  getTutor(){
+  getTutor() {
     return `Welcome tutor`;
   }
 
-  /*
-  @Get()
-  findAll() {
-    return this.communityService.findAll();
+  @UseGuards(VerifiedEmailGuard)
+  @Patch('change-password')
+  changePassword(@Body() data: ChangePasswordDto, @Request() req) {
+    return this.communityService.changePassword(req.user, data);
   }
-
-  
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommunityDto: UpdateCommunityDto) {
-    return this.communityService.update(+id, updateCommunityDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.communityService.remove(+id);
-  } */
 }
