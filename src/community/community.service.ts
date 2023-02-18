@@ -136,7 +136,8 @@ export class CommunityService {
 
   async createAdmin(user){
     try{
-      const userFound = await this.isEmailRegistered(user.email);
+      if(user.userType===UserType.Admin || user.userType===UserType.Tutor){
+        const userFound = await this.isEmailRegistered(user.email);
       if(!userFound){
         const password = generatePassword(8);
         const encryptedPassword = await bcrypt.hash(password, 10);
@@ -156,6 +157,9 @@ export class CommunityService {
           return 'User created successfully';
       }
       return 'User exists';
+      }
+      return 'Not Allowed'
+      
     }
     catch(err){
       return err
