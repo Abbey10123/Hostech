@@ -4,11 +4,12 @@ import { Repository } from 'typeorm';
 import { CommunityEntity } from './entities/community.entity';
 import * as bcrypt from 'bcrypt';
 import { BadRequestException } from '@nestjs/common/exceptions';
-import { generateOtp } from 'src/helpers/otp-generator.helper';
-import { sendEmail } from 'src/helpers/send-email.helper';
+
 import { OtpEntity } from './entities/otp.entity';
 import { OtpReason } from './interface/otp.interface';
 import { JwtService } from '@nestjs/jwt';
+import { generateOtp } from './helpers/otp.helper';
+import { sendEmail } from 'src/helpers/send-email.helper';
 import { generatePassword } from 'src/helpers/password-generator.helper';
 import { User, UserType } from './interface/user.interface';
 import { ChangePasswordDto } from './dto/change-password.dto';
@@ -78,7 +79,19 @@ export class CommunityService {
       if (!(await bcrypt.compare(loginInfo.password, userCheck.password)))
         throw 'Invalid password';
 
+      await this.communityRepository.update(userCheck.id, { loggedIn: true });
+
+      if (UserType.Admin && userCheck.loggedIn == false) {
+        const message = ` Welcome ${userCheck.fullName} to Talent dev Community,
+      Please reset your password to continue! `;
+        const subject = 'Reset Password';
+        sendEmail(userCheck, message, subject);
+      }
+
+      await this.communityRepository.update(userCheck.id, { loggedIn: true });
+
       delete userCheck.password;
+
       return {
         token: this.jwtService.sign({ ...userCheck }),
         user: userCheck,
@@ -97,7 +110,6 @@ export class CommunityService {
       if (!user) {
         throw new Error('Email does not exist');
       }
-
       const otpValue = generateOtp();
       const newOtp = this.otpRepository.create({
         code: otpValue.toString(),

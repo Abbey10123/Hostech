@@ -20,6 +20,7 @@ export interface User {
   userType: UserType;
   emailVerified?: boolean;
   title: string;
+  loggedIn: boolean
 }
 
 
