@@ -36,6 +36,13 @@ export class CommunityEntity implements User {
   })
   userType: UserType;
 
+  @Column({
+    type: 'boolean',
+    default: true,
+    name: 'email_verified',
+  })
+  emailVerified: boolean;
+
   @Column()
   title: string;
 }

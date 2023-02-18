@@ -9,6 +9,8 @@ import { sendEmail } from 'src/helpers/send-email.helper';
 import { OtpEntity } from './entities/otp.entity';
 import { OtpReason } from './interface/otp.interface';
 import { JwtService } from '@nestjs/jwt';
+import { User } from './interface/user.interface';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class CommunityService {
@@ -141,6 +143,31 @@ export class CommunityService {
       return `Password updated successfully  `;
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  async changePassword(user: User, data: ChangePasswordDto) {
+    try {
+      const userDetails = await this.communityRepository.findOne({
+        where: { id: user.id },
+      });
+      if (data.newPassword !== data.confirmNewPassword)
+        throw `New password and it's confirmation don't match`;
+      if (!(await bcrypt.compare(data.currentPassword, userDetails.password)))
+        throw `Invalid current password`;
+
+      await this.communityRepository.update(
+        { id: user.id },
+        { password: await bcrypt.hash(data.newPassword, 10) },
+      );
+
+      sendEmail(
+        user,
+        `Your password was just changed. Please notify us if you didn't change your password.`,
+        'TalentDev: Password Changed',
+      );
+    } catch (e) {
+      throw new BadRequestException(e);
     }
   }
 }
