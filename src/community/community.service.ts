@@ -165,7 +165,6 @@ export class CommunityService {
           const message = `You are welcome to Talent Dev, Kindly use these information to login to your account "email: ${savedAdmin.email} password: ${password}"`;
           const subject = `Welcome to Talent Dev `;
           await sendEmail(user, message, subject);
-          console.log("Admin created successfully!")
           return 'User created successfully';
       }
       return 'User exists';
