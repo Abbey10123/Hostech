@@ -156,9 +156,9 @@ export class CommunityService {
           await sendEmail(user, message, subject);
           return 'User created successfully';
       }
-      return 'User exists';
+      throw new BadRequestException();
       }
-      return 'Not Allowed'
+      throw new BadRequestException();
       
     }
     catch(err){
