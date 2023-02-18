@@ -9,8 +9,8 @@ import {
   Request,
 } from '@nestjs/common';
 import { CommunityService } from './community.service';
-import { GetEmailDto, ValidPassword } from './dto/get-emial.dto';
-import { CreateUserDto } from './dto/create-user.dto';
+import { GetEmailDto, ValidPassword } from './dto/get-email.dto';
+import { CreateAdminDto, CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AdminAccess } from './guards/admin-access.guards';
 import { TutorAccess } from './guards/tutor-access.guards';
@@ -40,6 +40,12 @@ export class CommunityController {
   @Post('reset-password/:otp')
   resetPassword(@Param('otp') otp: number, @Body() password: ValidPassword) {
     return this.communityService.resetPassword(otp, password.password);
+  }
+
+  @UseGuards(AdminAccess)
+  @Post('admin-register')
+  createAdmin(@Body() user: CreateAdminDto) {
+    return this.communityService.createAdmin(user);
   }
 
   @UseGuards(AdminAccess)

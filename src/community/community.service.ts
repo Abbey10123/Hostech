@@ -9,7 +9,8 @@ import { sendEmail } from 'src/helpers/send-email.helper';
 import { OtpEntity } from './entities/otp.entity';
 import { OtpReason } from './interface/otp.interface';
 import { JwtService } from '@nestjs/jwt';
-import { User } from './interface/user.interface';
+import { generatePassword } from 'src/helpers/password-generator.helper';
+import { User, UserType } from './interface/user.interface';
 import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
@@ -44,16 +45,6 @@ export class CommunityService {
 
       // Save the user to the DB
       const userSaved = await this.communityRepository.save(user);
-      // Generate Otp
-      const otp = generateOtp();
-      const expiry = new Date();
-      expiry.setMinutes(expiry.getMinutes() + 15);
-      await this.otpRepository.save({
-        userId: userSaved.id,
-        code: otp.toString(),
-        // reason: OtpReason.verifyEmail,
-        expiryDate: expiry,
-      });
       //Send a message to the user
       delete userSaved.password;
       const message = ` Welcome ${userSaved.fullName} to Talent dev Community,
@@ -106,13 +97,10 @@ export class CommunityService {
       if (!user) {
         throw new Error('Email does not exist');
       }
-      // const d = new Date();
-      // const dd= d.setMinutes(d.getMinutes() + 30);
 
       const otpValue = generateOtp();
       const newOtp = this.otpRepository.create({
         code: otpValue.toString(),
-        // expiryDate: dd.toISOString(),
         userId: user.id,
         reason: OtpReason.resetPassword,
       });
@@ -146,6 +134,38 @@ export class CommunityService {
     }
   }
 
+  async createAdmin(user) {
+    try {
+      if (
+        user.userType === UserType.Admin ||
+        user.userType === UserType.Tutor
+      ) {
+        const userFound = await this.isEmailRegistered(user.email);
+        if (!userFound) {
+          const password = generatePassword(8);
+          const encryptedPassword = await bcrypt.hash(password, 10);
+          const userAdmin = this.communityRepository.create({
+            email: user.email,
+            phoneNumber: user.phoneNumber,
+            title: user.title,
+            gender: user.gender,
+            userType: user.userType,
+            fullName: user.fullName,
+            password: encryptedPassword,
+          });
+          const savedAdmin = await this.communityRepository.save(userAdmin);
+          const message = `You are welcome to Talent Dev, Kindly use these information to login to your account "email: ${savedAdmin.email} password: ${password}"`;
+          const subject = `Welcome to Talent Dev `;
+          sendEmail(user, message, subject);
+          return 'User created successfully';
+        }
+        throw `User not found`;
+      }
+      throw `Invalid User type`;
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
+  }
   async changePassword(user: User, data: ChangePasswordDto) {
     try {
       const userDetails = await this.communityRepository.findOne({
