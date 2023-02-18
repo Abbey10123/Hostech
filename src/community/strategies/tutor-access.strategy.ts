@@ -5,7 +5,7 @@ import { User, UserType } from '../interface/user.interface';
 import { UnauthorizedException } from '@nestjs/common/exceptions';
 
 @Injectable()
-export class NotVerifiedEmailStrategy extends PassportStrategy(
+export class TutorStrategy extends PassportStrategy(
   Strategy,
   'tutor-access',
 ) {
