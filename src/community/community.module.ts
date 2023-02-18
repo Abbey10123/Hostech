@@ -8,6 +8,7 @@ import { NotVerifiedEmailStrategy } from './strategies/not-verified-email.strate
 import { JwtModule } from '@nestjs/jwt/dist';
 import { AdminStrategy } from './strategies/admin-access.strategy';
 import { TutorStrategy } from './strategies/tutor-access.strategy';
+import { VerifiedEmailStrategy } from './strategies/verified-email.strategy';
 
 @Module({
   imports: [
@@ -20,6 +21,12 @@ import { TutorStrategy } from './strategies/tutor-access.strategy';
     }),
   ],
   controllers: [CommunityController],
-  providers: [CommunityService, NotVerifiedEmailStrategy,AdminStrategy,TutorStrategy],
+  providers: [
+    CommunityService,
+    NotVerifiedEmailStrategy,
+    AdminStrategy,
+    TutorStrategy,
+    VerifiedEmailStrategy,
+  ],
 })
 export class CommunityModule {}
