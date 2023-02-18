@@ -1,8 +1,9 @@
-import { Controller, Post, Body, Param } from '@nestjs/common';
+import { Controller, Post, Body, Param, Patch } from '@nestjs/common';
 import { CommunityService } from './community.service';
 import { GetEmailDto, ValidPassword } from './dto/get-emial.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
+import { User } from './interface/user.interface';
 
 @Controller('user')
 export class CommunityController {
@@ -29,6 +30,7 @@ export class CommunityController {
     return this.communityService.resetPassword(otp, password.password);
   }
 
+  
   /*
   @Get()
   findAll() {

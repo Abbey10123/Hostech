@@ -38,4 +38,7 @@ export class CommunityEntity implements User {
 
   @Column()
   title: string;
+
+  @Column({type:'boolean', default:false,  name: 'logged_in'})
+  loggedIn: boolean;
 }

@@ -19,4 +19,5 @@ export interface User {
   gender: Gender;
   userType: UserType;
   title: string;
+  loggedIn: boolean
 }
