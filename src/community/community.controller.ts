@@ -72,7 +72,7 @@ export class CommunityController {
   }
 
   @UseGuards(VerifiedEmailGuard)
-  @Patch('update-user')
+  @Patch('update')
   updateUser(@Body() user: UpdateCommunityDto, @Request() req) {
     console.log(req.user);
     return this.communityService.updateUser(req.user, user)

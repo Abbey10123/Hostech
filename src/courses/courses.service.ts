@@ -21,7 +21,6 @@ export class CoursesService {
   
   async createCourse(course) {
    try{
-    if(UserType.Admin)
     await this.coursesRepository.save(course)
     return 'Course created successfully';
    }
@@ -31,7 +30,6 @@ export class CoursesService {
   }
   async delCourse (courseId: number) {
     try{
-      if(UserType.Admin)
       await this.coursesRepository.softDelete({id:courseId})
       return 'Course successfully deleted';
      }
