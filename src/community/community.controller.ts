@@ -17,7 +17,6 @@ import { TutorAccess } from './guards/tutor-access.guards';
 import { VerifiedEmailGuard } from './guards/verified-email.guard';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { UpdateCommunityDto } from './dto/update-community.dto';
-import { User } from './interface/user.interface';
 import { Delete } from '@nestjs/common/decorators';
 import { DeleteProfileDto } from './dto/delete-profile.dto';
 
