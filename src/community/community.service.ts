@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { CommunityEntity } from './entities/community.entity';
 import * as bcrypt from 'bcrypt';
 import { BadRequestException } from '@nestjs/common/exceptions';
-
 import { OtpEntity } from './entities/otp.entity';
 import { OtpReason } from './interface/otp.interface';
 import { JwtService } from '@nestjs/jwt';
@@ -201,5 +200,8 @@ export class CommunityService {
     } catch (e) {
       throw new BadRequestException(e);
     }
+  }
+  getUser(userId: number){
+    return this.communityRepository.findOne({where:{id: userId}})
   }
 }

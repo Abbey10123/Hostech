@@ -16,6 +16,8 @@ import { AdminAccess } from './guards/admin-access.guards';
 import { TutorAccess } from './guards/tutor-access.guards';
 import { VerifiedEmailGuard } from './guards/verified-email.guard';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { userInfo } from 'os';
+import { User } from './interface/user.interface';
 
 @Controller('user')
 export class CommunityController {
@@ -25,6 +27,8 @@ export class CommunityController {
   create(@Body() user: CreateUserDto) {
     return this.communityService.createUser(user);
   }
+
+ 
 
   @Post('login')
   login(@Body() loginInfo: LoginUserDto) {
@@ -64,5 +68,12 @@ export class CommunityController {
   @Patch('change-password')
   changePassword(@Body() data: ChangePasswordDto, @Request() req) {
     return this.communityService.changePassword(req.user, data);
+  }
+  
+  @UseGuards(VerifiedEmailGuard)
+  @Get('profile/:id')
+  getUser( @Param('id')id: Number){
+    return this.communityService.getUser(Number(id));
+
   }
 }
