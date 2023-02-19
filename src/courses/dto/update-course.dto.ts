@@ -1,14 +1,7 @@
+export class UpdateCourseDto {
+  courseName: string;
 
-export class UpdateCourseDto  {
-    
+  coursePrice: number;
 
-        courseName: string; 
-        
-        coursePrice: number; 
-    
-        isAvailable: boolean;
-        
-        
-   
-    
+  isAvailable: boolean;
 }

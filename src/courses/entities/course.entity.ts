@@ -1,4 +1,10 @@
-import { Column, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity({ name: 'courses' })
 export class CourseEntity {
@@ -16,10 +22,10 @@ export class CourseEntity {
 
   @Column({ name: 'course_name' })
   courseName: string;
-  
+
   @Column({ default: true })
   isAvailable: boolean;
 
-  @DeleteDateColumn({name: 'delete_at'})
+  @DeleteDateColumn({ name: 'delete_at' })
   deletedAt: Date;
 }

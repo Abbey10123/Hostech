@@ -5,10 +5,7 @@ import { User, UserType } from '../interface/user.interface';
 import { UnauthorizedException } from '@nestjs/common/exceptions';
 
 @Injectable()
-export class TutorStrategy extends PassportStrategy(
-  Strategy,
-  'tutor-access',
-) {
+export class TutorStrategy extends PassportStrategy(Strategy, 'tutor-access') {
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -18,10 +15,10 @@ export class TutorStrategy extends PassportStrategy(
   }
 
   async validate(loginInfo: User) {
-    if (loginInfo.userType !== UserType.Tutor){
-        throw new UnauthorizedException({
-            message: `You are not a Tutor`,
-        });
+    if (loginInfo.userType !== UserType.Tutor) {
+      throw new UnauthorizedException({
+        message: `You are not a Tutor`,
+      });
     }
 
     return {

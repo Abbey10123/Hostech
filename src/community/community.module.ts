@@ -28,9 +28,11 @@ import { VerifiedEmailStrategy } from './strategies/verified-email.strategy';
     TutorStrategy,
     VerifiedEmailStrategy,
   ],
-  exports: [NotVerifiedEmailStrategy,
+  exports: [
+    NotVerifiedEmailStrategy,
     AdminStrategy,
     TutorStrategy,
-    VerifiedEmailStrategy]
+    VerifiedEmailStrategy,
+  ],
 })
 export class CommunityModule {}

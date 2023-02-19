@@ -8,13 +8,16 @@ import { CommunityModule } from 'src/community/community.module';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CourseEntity, CourseContentEntity]), CommunityModule,
-  JwtModule.register({
-    secret: 'jwtEncryptionKey',
-    signOptions: {
-      expiresIn: '2d',
-    },
-  })],
+  imports: [
+    TypeOrmModule.forFeature([CourseEntity, CourseContentEntity]),
+    CommunityModule,
+    JwtModule.register({
+      secret: 'jwtEncryptionKey',
+      signOptions: {
+        expiresIn: '2d',
+      },
+    }),
+  ],
   controllers: [CoursesController],
   providers: [CoursesService],
 })

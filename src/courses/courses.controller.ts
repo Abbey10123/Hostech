@@ -18,17 +18,9 @@ import { Course } from './interfaces/course.interface';
 @Controller('courses')
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
-  //get course
   @Get(':id')
   findCourse(@Param('id') id: number) {
     return this.coursesService.findCourse(id);
-  }
-
-  //edit course content
-  @UseGuards(AdminAccess)
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
-    return `Edit course content`;
   }
 
   @UseGuards(AdminAccess)
