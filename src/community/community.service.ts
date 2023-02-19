@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityNotFoundError, Repository } from 'typeorm';
 import { CommunityEntity } from './entities/community.entity';
 import * as bcrypt from 'bcrypt';
-import { BadRequestException } from '@nestjs/common/exceptions';
+import { BadRequestException ,NotFoundException} from '@nestjs/common/exceptions';
 
 import { OtpEntity } from './entities/otp.entity';
 import { OtpReason } from './interface/otp.interface';
@@ -202,4 +202,17 @@ export class CommunityService {
       throw new BadRequestException(e);
     }
   }
+   
+  
+  async deleteProfile(id:number){
+    const deleteResponse = await this.communityRepository.softDelete(id);
+    if (!deleteResponse.affected){
+      throw new NotFoundException(id);
+    }
+    return `Profile has been deleted!`;
+  }
+
+
+
+
 }
