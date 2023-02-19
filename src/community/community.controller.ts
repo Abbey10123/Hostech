@@ -17,6 +17,7 @@ import { TutorAccess } from './guards/tutor-access.guards';
 import { VerifiedEmailGuard } from './guards/verified-email.guard';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { Delete } from '@nestjs/common/decorators';
+import { DeleteProfileDto } from './dto/delete-profile.dto';
 
 @Controller('user')
 export class CommunityController {
@@ -70,8 +71,8 @@ export class CommunityController {
 
   @UseGuards(AdminAccess)
   @Delete('delete-profile')
-  deleteProfile(@Body() id:number) {
-    return this.communityService.deleteProfile(id);
+  deleteProfile(@Body() data:DeleteProfileDto) {
+    return this.communityService.deleteProfile(data.id);
   }
   
 }

@@ -50,6 +50,6 @@ export class CommunityEntity implements User {
   loggedIn: boolean;
 
 
-  @DeleteDateColumn()
+  @DeleteDateColumn({name:'delete_date_column'})
   deletedAt?:Date;
 }

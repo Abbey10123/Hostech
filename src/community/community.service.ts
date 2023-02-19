@@ -209,6 +209,7 @@ export class CommunityService {
     if (!deleteResponse.affected){
       throw new NotFoundException(id);
     }
+    return `Profile has been deleted!`;
   }
 
 
