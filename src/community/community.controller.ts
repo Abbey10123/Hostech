@@ -16,6 +16,8 @@ import { AdminAccess } from './guards/admin-access.guards';
 import { TutorAccess } from './guards/tutor-access.guards';
 import { VerifiedEmailGuard } from './guards/verified-email.guard';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { UpdateCommunityDto } from './dto/update-community.dto';
+import { User } from './interface/user.interface';
 import { Delete } from '@nestjs/common/decorators';
 import { DeleteProfileDto } from './dto/delete-profile.dto';
 
@@ -68,11 +70,21 @@ export class CommunityController {
     return this.communityService.changePassword(req.user, data);
   }
 
+  @UseGuards(VerifiedEmailGuard)
+  @Patch('update')
+  updateUser(@Body() user: UpdateCommunityDto, @Request() req) {
+    console.log(req.user);
+    return this.communityService.updateUser(req.user, user);
+  }
+  @UseGuards(VerifiedEmailGuard)
+  @Get('profile/:id')
+  getUser(@Param('id') id: number) {
+    return this.communityService.getUser(Number(id));
+  }
 
   @UseGuards(AdminAccess)
   @Delete('delete-profile')
-  deleteProfile(@Body() data:DeleteProfileDto) {
+  deleteProfile(@Body() data: DeleteProfileDto) {
     return this.communityService.deleteProfile(data.id);
   }
-  
 }

@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityNotFoundError, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CommunityEntity } from './entities/community.entity';
 import * as bcrypt from 'bcrypt';
-import { BadRequestException ,NotFoundException} from '@nestjs/common/exceptions';
+import {
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common/exceptions';
 
 import { OtpEntity } from './entities/otp.entity';
 import { OtpReason } from './interface/otp.interface';
@@ -202,17 +205,40 @@ export class CommunityService {
       throw new BadRequestException(e);
     }
   }
-   
-  
-  async deleteProfile(id:number){
+
+  async updateUser(user, data) {
+    try {
+      await this.communityRepository.update(
+        {
+          id: user.userId,
+        },
+        {
+          fullName: data.fullName || user.fullName,
+          phoneNumber: data.phoneNumber || user.phoneNumber,
+          title: data.title || user.title,
+          email: data.email || user.email,
+          gender: data.gender || user.gender,
+        },
+      );
+      const { password, loggedIn, id, emailVerified, ...updatedUser } =
+        await this.communityRepository.findOne({ where: { id: user.userId } });
+      return {
+        userr: updatedUser,
+        msg: `User updated successfully`,
+      };
+    } catch (e) {
+      throw new BadRequestException(e);
+    }
+  }
+  getUser(userId: number) {
+    return this.communityRepository.findOne({ where: { id: userId } });
+  }
+
+  async deleteProfile(id: number) {
     const deleteResponse = await this.communityRepository.softDelete(id);
-    if (!deleteResponse.affected){
+    if (!deleteResponse.affected) {
       throw new NotFoundException(id);
     }
     return `Profile has been deleted!`;
   }
-
-
-
-
 }
