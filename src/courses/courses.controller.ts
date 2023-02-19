@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   UseGuards,
-  
 } from '@nestjs/common';
 import { AdminAccess } from 'src/community/guards/admin-access.guards';
 import { TutorAccess } from 'src/community/guards/tutor-access.guards';
@@ -19,6 +18,18 @@ import { Course } from './interfaces/course.interface';
 @Controller('courses')
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
+  //get course
+  @Get(':id')
+  findCourse(@Param('id') id: number) {
+    return this.coursesService.findCourse(id);
+  }
+
+  //edit course content
+  @UseGuards(AdminAccess)
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
+    return `Edit course content`;
+  }
 
   @UseGuards(AdminAccess)
   @Post()
@@ -26,11 +37,13 @@ export class CoursesController {
     return this.coursesService.createCourse(course);
   }
 
+  @UseGuards(AdminAccess)
   @Delete(':id')
   delCourse(@Param('id') id: number) {
-    return this.coursesService.delCourse (Number(id));
+    return this.coursesService.delCourse(Number(id));
   }
 
+  @UseGuards(AdminAccess)
   @Post()
   courseContent(@Body() course: Course) {
     return this.coursesService.createCourse(course);
@@ -38,7 +51,7 @@ export class CoursesController {
 
   @UseGuards(AdminAccess)
   @Patch('update-course/:id')
-  updateCourse(@Body() data: UpdateCourseDto, @Param('id') id: number  ) {
+  updateCourse(@Body() data: UpdateCourseDto, @Param('id') id: number) {
     return this.coursesService.updateCourse(id, data);
   }
 
@@ -47,21 +60,4 @@ export class CoursesController {
   deleteCourseContent(@Param('id') id: number) {
     return this.coursesService.deleteCourseContent(id);
   }
-
-
-  // @Get()
-  // findAll() {
-  //   return this.coursesService.findAll();
-  // }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.coursesService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
-  //   return this.coursesService.update(+id, updateCourseDto);
-  // }
-
 }
