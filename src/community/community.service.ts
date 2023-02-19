@@ -202,4 +202,26 @@ export class CommunityService {
       throw new BadRequestException(e);
     }
   }
+
+  async updateUser(user: User, data){
+    try{
+      await this.communityRepository.update({
+        id: user.id
+      },{
+        fullName: data.fullName || user.fullName,
+        phoneNumber: data.phoneNumber || user.phoneNumber,
+        title: data.title || user.title,
+        email: data.email || user.email,
+        gender: data.gender || user.gender
+      });
+      const { password, loggedIn, id, emailVerified,  ...updatedUser} = await this.communityRepository.findOne({where:{id: user.id}});
+      return {
+        userr: updatedUser,
+        msg: `User updated successfully`
+      }
+    }
+    catch(e){
+      throw new BadRequestException(e);
+    }
+  }
 }

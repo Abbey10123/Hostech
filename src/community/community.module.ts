@@ -16,7 +16,7 @@ import { VerifiedEmailStrategy } from './strategies/verified-email.strategy';
     JwtModule.register({
       secret: 'jwtEncryptionKey',
       signOptions: {
-        expiresIn: '60s',
+        expiresIn: '2d',
       },
     }),
   ],
