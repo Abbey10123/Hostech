@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, DeleteDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { Gender, User, UserType } from '../interface/user.interface';
 
 @Entity({
@@ -48,4 +48,8 @@ export class CommunityEntity implements User {
 
   @Column({type:'boolean', default:false,  name: 'logged_in'})
   loggedIn: boolean;
+
+
+  @DeleteDateColumn()
+  deletedAt?:Date;
 }

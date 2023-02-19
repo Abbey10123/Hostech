@@ -15,15 +15,25 @@ import { UpdateCourseDto } from './dto/update-course.dto';
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
+  //get course
+  @Get(':id')
+  findCourse(@Param('id') id:number)
+  {
+    return this.coursesService.findCourse(id);
+  }
+
+  //edit course content
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
+    return `Edit course content`;
+  }
+
+  /*
   @Post()
   create(@Body() createCourseDto: CreateCourseDto) {
     return this.coursesService.create(createCourseDto);
   }
 
-  @Get()
-  findAll() {
-    return this.coursesService.findAll();
-  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -38,5 +48,5 @@ export class CoursesController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.coursesService.remove(+id);
-  }
+  } */
 }
