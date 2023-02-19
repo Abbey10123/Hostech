@@ -203,10 +203,10 @@ export class CommunityService {
     }
   }
 
-  async updateUser(user: User, data){
+  async updateUser(user, data){
     try{
       await this.communityRepository.update({
-        id: user.id
+        id:user.userId
       },{
         fullName: data.fullName || user.fullName,
         phoneNumber: data.phoneNumber || user.phoneNumber,
@@ -214,7 +214,7 @@ export class CommunityService {
         email: data.email || user.email,
         gender: data.gender || user.gender
       });
-      const { password, loggedIn, id, emailVerified,  ...updatedUser} = await this.communityRepository.findOne({where:{id: user.id}});
+      const { password, loggedIn, id, emailVerified,  ...updatedUser} = await this.communityRepository.findOne({where:{id: user.userId}});
       return {
         userr: updatedUser,
         msg: `User updated successfully`

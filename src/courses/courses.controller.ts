@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
-
+import { VerifiedEmailGuard } from 'src/community/guards/verified-email.guard'; 
+import { AdminAccess } from 'src/community/guards/admin-access.guards';
 @Controller('courses')
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
@@ -20,9 +22,10 @@ export class CoursesController {
     return this.coursesService.create(createCourseDto);
   }
 
+  @UseGuards(AdminAccess)
   @Get()
   findAll() {
-    return this.coursesService.findAll();
+    return `protected`;
   }
 
   @Get(':id')
