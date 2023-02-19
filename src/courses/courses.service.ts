@@ -1,26 +1,82 @@
 import { Injectable } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common/exceptions';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserType } from 'src/community/interface/user.interface';
+import { Repository } from 'typeorm';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
+import { CourseEntity } from './entities/course.entity';
+import { Course } from './interfaces/course.interface';
+import { CourseContentEntity } from './entities/course-content.entity';
 
 @Injectable()
 export class CoursesService {
-  create(createCourseDto: CreateCourseDto) {
-    return 'This action adds a new course';
-  }
+  constructor(
+    @InjectRepository(CourseEntity)
+    private coursesRepository: Repository<CourseEntity>,
+    @InjectRepository(CourseContentEntity)
+    private courseConRepository: Repository<CourseContentEntity>
+  ){}
 
-  findAll() {
-    return `This action returns all courses`;
+  
+  async createCourse(course) {
+   try{
+    if(UserType.Admin)
+    await this.coursesRepository.save(course)
+    return 'Course created successfully';
+   }
+    catch (e){
+      throw new BadRequestException
+    }
   }
+  async delCourse (courseId: number) {
+    try{
+      if(UserType.Admin)
+      await this.coursesRepository.softDelete({id:courseId})
+      return 'Course successfully deleted';
+     }
+      catch (e){
+        throw new BadRequestException
+      }
+}
 
-  findOne(id: number) {
-    return `This action returns a #${id} course`;
+async updateCourse(id: number, data) {
+  try{
+    const courseFound = await this.coursesRepository.findOne({where: {id}});
+    if(courseFound){
+      await this.coursesRepository.update({
+        id: id
+      },
+      {
+        courseName: data.courseName || courseFound.courseName,
+        coursePrice: data.coursePrice || courseFound.coursePrice,
+        isAvailable: data.isAvailable || courseFound.isAvailable
+      });
+      const updatedCourse = await this.coursesRepository.findOne({where:{id}});
+      return {
+        updatedCourse,
+        msg: `Course updated successfully`
+      }
+    }
+    throw `Invalid course id` ;
   }
+  catch(e){
+    throw new BadRequestException(e);
+  }
+}
 
-  update(id: number, updateCourseDto: UpdateCourseDto) {
-    return `This action updates a #${id} course`;
+async deleteCourseContent(id:number){
+  try{
+    const courseConFound = await this.courseConRepository.findOne({where:{id}});
+    if(courseConFound){
+      await this.courseConRepository.softDelete(id);
+      return `Course Content Deleted Successfully!`;
+    }
+    throw `Invalid Course Content id`
   }
+  catch(e){
+    throw new BadRequestException(e);
+  }
+}
 
-  remove(id: number) {
-    return `This action removes a #${id} course`;
-  }
 }
