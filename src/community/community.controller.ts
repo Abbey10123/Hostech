@@ -24,7 +24,7 @@ import { DeleteProfileDto } from './dto/delete-profile.dto';
 export class CommunityController {
   constructor(private readonly communityService: CommunityService) {}
 
-  @Post()
+  @Get()
   create(@Body() user: CreateUserDto) {
     return this.communityService.createUser(user);
   }
