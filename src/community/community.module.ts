@@ -9,6 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AdminStrategy } from './strategies/admin-access.strategy';
 import { TutorStrategy } from './strategies/tutor-access.strategy';
 import { VerifiedEmailStrategy } from './strategies/verified-email.strategy';
+import { StudentStrategy } from './strategies/student-access.strategy';
 
 @Module({
   imports: [
@@ -27,12 +28,14 @@ import { VerifiedEmailStrategy } from './strategies/verified-email.strategy';
     AdminStrategy,
     TutorStrategy,
     VerifiedEmailStrategy,
+    StudentStrategy
   ],
   exports: [
     NotVerifiedEmailStrategy,
     AdminStrategy,
     TutorStrategy,
     VerifiedEmailStrategy,
+    StudentStrategy
   ],
 })
 export class CommunityModule {}
